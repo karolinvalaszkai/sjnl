@@ -7,7 +7,7 @@
 
 from linkedQFile import LinkedQ
 
-
+# kokok
 class Syntaxfel(Exception):
     pass
 
