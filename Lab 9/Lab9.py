@@ -21,6 +21,13 @@ class Syntaxfel(Exception):
 # Lägg till de nya ändringarna, typ "H"
 
 
+# hitta startparentes
+# dequa startparantesen
+# leta efter slutparantesen
+
+
+
+
 # <formel>::= <mol> \n
 
 def read_formel():
