@@ -23,23 +23,18 @@ class Syntaxfel(Exception):
 
 # <formel>::= <mol> \n
 
-def read_formel():
-    read_mol(q)
 
-    #+ev radbryt?
 
 
 
 # <mol>   ::= <group> | <group><mol>
 
 def read_mol(q):
-    read_group()
-
+    read_group(q)
     next = q.peek()
 
-
-    if next is not None and i
-        read_mol()
+    if next is not None:
+        read_mol(next)
 
 
 
@@ -57,20 +52,20 @@ def read_group(q):
     if first_char != "(":
         atom(first_char, q, next)   # atom pga båda cases innehålller atom
 
+        if next is not None and next.isdigit():      #kolla ifall number, jsdigit() pga string
+            num(next, q)
+        return
 
-        if next != '0':             # först kolla om första siffran är 0 -> bryt
+    elif first_char == "(":
+        read_mol(q)
+        if q.peek() == ")":
+            num(next, q)
+        else:
+            raise Syntaxfel("Saknad högerparentes vid radslutet")
 
 
-            next = q.peek()
 
-            if next is not None and next.isdigit():      #kolla ifall number, jsdigit() pga string
-                #next = q.peek()
-                num(next, q)
-                #q.dequeue()
 
-    if next == "(":
-        read_mol()
-        num(next, q)
 
 
 
@@ -83,13 +78,16 @@ def read_group(q):
 def atom(first_char, q, next):
     upper_case_l(first_char)  #H
 
-    if next is not None and next.isdigit():
-        return
+    if next is not None:
+        if next.isdigit():
+            return
 
+        else:
+            #if next is not None:   #pga vissa är bara en bokstav?
+            lower_case_l(next)
+            q.dequeue()
     else:
-        #if next is not None:   #pga vissa är bara en bokstav?
-        lower_case_l(next)
-        q.dequeue()
+        return
 
     raise Syntaxfel("Okänd atom vid radslutet") #+vadå??)
 
@@ -167,6 +165,11 @@ def check_syntax(mening):
         return "Formeln är syntastiskt korrekt"
     except Syntaxfel as fel:
         return str(fel) #+  " före " + str()
+
+def read_formel(q):
+    read_mol(q)
+    '\n'
+    #+ev radbryt?
 
 def main():
     mening = input("Skriv en atom: ")
