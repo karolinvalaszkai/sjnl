@@ -10,12 +10,17 @@ class SyntaxTest(unittest.TestCase):
 
     """CORRECT"""
 
-    def testCorrectMolecule(self):
+    def testCorrectMolecule1(self):
         self.assertEqual(check_syntax("Na"), "Formeln är syntastiskt korrekt")
-        self.assertEqual(check_syntax("H20"), "Formeln är syntastiskt korrekt")
-        self.assertEqual(check_syntax("Si(C3(COOH)2)4(H20)7"), "Formeln är syntastiskt korrekt")
-        self.assertEqual(check_syntax("Na332"), "Formeln är syntastiskt korrekt")
 
+    def testCorrectMolecule2(self):
+        self.assertEqual(check_syntax("H2O"), "Formeln är syntastiskt korrekt")
+
+    def testCorrectMolecule3(self):
+        self.assertEqual(check_syntax("Si(C3(COOH)2)4(H2O)7"), "Formeln är syntastiskt korrekt")
+
+    def testCorrectMolecule4(self):
+        self.assertEqual(check_syntax("Na332"), "Formeln är syntastiskt korrekt")
 
 
 if __name__ == '__main__':

@@ -18,7 +18,7 @@ class SyntaxTest(unittest.TestCase):
         self.assertEqual(check_syntax("H20)Fe"), "Felaktig gruppstart vid radslutet )Fe")
         self.assertEqual(check_syntax("H0"), "För litet tal vid radslutet")
         self.assertEqual(check_syntax("H1C"), "För litet tal vid radslutet C")
-        self.assertEqual(check_syntax("H02C"), "För litet tal vid radslutet 2C)
+        self.assertEqual(check_syntax("H02C"), "För litet tal vid radslutet 2C")
         self.assertEqual(check_syntax("Nacl"), "Saknad stor bokstav vid radslutet cl")
         self.assertEqual(check_syntax("a"), "Saknad stor bokstav vid radslutet a")
         self.assertEqual(check_syntax("(C1)2)3"), "Felaktig gruppstart vid radslutet )3")
