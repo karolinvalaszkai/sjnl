@@ -14,9 +14,23 @@ class SyntaxTest(unittest.TestCase):
     def testWrongMolecule(self):
         self.assertEqual(check_syntax("C(Xx4)5"), "Okänd atom vid radslutet 4)5")
         self.assertEqual(check_syntax("C(OH4)C"), "Saknad siffra vid radslutet C")
+<<<<<<< Updated upstream
         self.assertEqual(check_syntax("C(OH4C"), "Saknad högerparantes vid radslutet")
         self.assertEqual(check_syntax("H20)Fe"), "Felaktig gruppstart vid radslutet )Fe")
         self.assertEqual(check_syntax("H0"), "För litet tal vid radslutet")
+=======
+
+    def testWrongMolecule3(self):
+        self.assertEqual(check_syntax("C(OH4C"), "Saknad högerparentes vid radslutet ")
+
+    def testWrongMolecule4(self):
+        self.assertEqual(check_syntax("H20)Fe"), "Felaktig gruppstart vid radslutet )Fe")
+
+    def testWrongMolecule5(self):
+        self.assertEqual(check_syntax("H0"), "För litet tal vid radslutet ")
+
+    def testWrongMolecule6(self):
+>>>>>>> Stashed changes
         self.assertEqual(check_syntax("H1C"), "För litet tal vid radslutet C")
         self.assertEqual(check_syntax("H02C"), "För litet tal vid radslutet 2C")
         self.assertEqual(check_syntax("Nacl"), "Saknad stor bokstav vid radslutet cl")
