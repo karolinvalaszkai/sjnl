@@ -12,12 +12,6 @@ class Syntaxfel(Exception):
     pass
 
 
-#[21] ej [2,1]
-#nonetype next
-#gå igenom mer än 2
-
-#byt mening till atomnamn?09
-
 
 
 """MOLECULE"""
@@ -30,16 +24,15 @@ def molecule(q):
     atom(first_char, q, next)   # atom pga båda cases innehålller atom
 
 
-    if next != '0':             # först kolla om första siffran är 0 -> bryt
+    #if next != '0':             # först kolla om första siffran är 0 -> bryt
 
-        # while, körs tills påståendet är sant
 
-        next = q.peek()
+    next = q.peek()
 
-        if next is not None and next.isdigit():      #kolla ifall number, jsdigit() pga string
-            #next = q.peek()
-            num(next, q)
-            #q.dequeue()
+    if next is not None and next.isdigit():      #kolla ifall number, jsdigit() pga string
+        #next = q.peek()
+        num(next, q)
+        #q.dequeue()
 
 
 """ATOM"""
@@ -52,11 +45,12 @@ def atom(first_char, q, next):
     if next is not None and next.isdigit():
         return
 
-    else:
+    if next is not None:
         #if next is not None:   #pga vissa är bara en bokstav?
         lower_case_l(next)
         q.dequeue()
-
+    else:
+        return
 
 
 """UPPER CASE LETTER"""
@@ -68,7 +62,7 @@ def upper_case_l(first_char):
     if first_char.isupper(): #P if sant
         return
 
-    raise Syntaxfel("Fel, borde vara uppercase: ") #+ first_char) #eller hela atomnamnet?
+    raise Syntaxfel("Fel, borde vara uppercase: " + first_char) #+ first_char) #eller hela atomnamnet?
 
 
 
@@ -102,7 +96,7 @@ def num(next, q):
         next = q.peek()
 
 
-    if int(sum_int) > 1:
+    if int(sum_int) > 1:                        # 21 ej 2,1
         return
 
     raise Syntaxfel("För litet tal vid radslutet")

@@ -21,13 +21,6 @@ class Syntaxfel(Exception):
 # Lägg till de nya ändringarna, typ "H"
 
 
-# hitta startparentes
-# dequa startparantesen
-# leta efter slutparantesen
-
-
-
-
 # <formel>::= <mol> \n
 
 def read_formel(q):
@@ -39,7 +32,7 @@ def read_formel(q):
 def read_mol(q):
     read_group(q)
 
-    if q.peek() is not None and q.peek() != ")": # ej tillräckligt villkor
+    if q.peek() is not None:
         read_mol(q)
     return
     #if dequeued is not None:
@@ -53,14 +46,14 @@ def read_mol(q):
 """
 
 def read_group(q):
-    first_char = q.dequeue()    # behöver ens dequeue:a?
+    3#next = q.dequeue()    # behöver ens dequeue:a?
     next = q.peek()
     if q.peek() != None:
         next = q.peek()             # kollar på 21an
 
 
-    if first_char != "(" and first_char != ")" and not first_char.isdigit():
-        atom(first_char, q, next)   # atom pga båda cases innehålller atom
+    if next != "(" and next != ")" and not next.isdigit():
+        atom(next, q)   # atom pga båda cases innehålller atom
         #q.dequeue()
         next = q.peek()
         while next is not None and next.isdigit():      #kolla ifall number, jsdigit() pga string
@@ -69,10 +62,10 @@ def read_group(q):
             next = q.peek()
         return
 
-    if first_char == ")":
+    if next == ")":
         return
 
-    elif first_char == "(":
+    elif next == "(":
         #q.dequeue() # för att få det inuti parentes
         read_mol(q)
         next = q.peek()
@@ -85,15 +78,15 @@ def read_group(q):
                 num(next, q)
                 return
         else:
-            raise Syntaxfel("Saknad högerparentes vid radslutet ")
+            raise Syntaxfel("Saknad högerparentes vid radslutet: ")
 
 
 """ATOM"""
 #< atom >::= < LETTER > | < LETTER > < letter >
 
 
-def atom(first_char, q, next):
-    upper_case_l(first_char)  #H
+def atom(next, q):
+    upper_case_l(next, q)  #H
 
     if next == None:
         return
@@ -102,8 +95,7 @@ def atom(first_char, q, next):
         return # ska vi kolla  num, "(" eller ")" i denna funktion
 
     elif next is not None:
-        lower_case_l(next)
-        q.dequeue()
+        lower_case_l(next, q)
         return
 
     raise Syntaxfel("Okänd atom vid radslutet") + next #+vadå??)
@@ -113,23 +105,25 @@ def atom(first_char, q, next):
 #< LETTER >::= A | B | C | ... | Z
 
 
-def upper_case_l(first_char):
+def upper_case_l(next, q):
     #check both for int or letter
-    if first_char.isupper(): #P if sant
+    if next.isupper(): #P if sant
+        q.dequeue()
         return
 
-    raise Syntaxfel("Saknad stor bokstav vid radslutet " + first_char) #+ first_char) #eller hela atomnamnet?
+    raise Syntaxfel("Fel, borde vara uppercase: " + next) #+ next) #eller hela atomnamnet?
 
 
 """LOWER CASE LETTER"""
 #< letter >::= a | b | c | ... | z
 
 
-def lower_case_l(next):
+def lower_case_l(next, q):
     if next.islower():  #
+        q.dequeue()
         return
 
-    raise Syntaxfel("Fel, borde vara lowercase " + next) #next eller word?
+    raise Syntaxfel("Fel, borde vara lowercase: " + next) #next eller word?
 
 
 """NUMBER"""
@@ -153,7 +147,7 @@ def num(next, q):
     if int(sum_int) > 1:
         return q
 
-    raise Syntaxfel("För litet tal vid radslutet " + next)
+    raise Syntaxfel("För litet tal vid radslutet: " + next)
 
 
 def printQueue(q):
