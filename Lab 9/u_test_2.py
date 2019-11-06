@@ -18,13 +18,13 @@ class SyntaxTest(unittest.TestCase):
         self.assertEqual(check_syntax("C(OH4)C"), "Saknad siffra vid radslutet C")
 
     def testWrongMolecule3(self):
-        self.assertEqual(check_syntax("C(OH4C"), "Saknad högerparantes vid radslutet")
+        self.assertEqual(check_syntax("C(OH4C"), "Saknad högerparentes vid radslutet ")
 
     def testWrongMolecule4(self):
-        self.assertEqual(check_syntax("H20)Fe"), "Felaktig gruppstart vid radslutet )Fe")
+        self.assertEqual(check_syntax("H2O)Fe"), "Felaktig gruppstart vid radslutet )Fe")
 
     def testWrongMolecule5(self):
-        self.assertEqual(check_syntax("H0"), "För litet tal vid radslutet")
+        self.assertEqual(check_syntax("H0"), "För litet tal vid radslutet ")
 
     def testWrongMolecule6(self):
         self.assertEqual(check_syntax("H1C"), "För litet tal vid radslutet C")
@@ -39,7 +39,7 @@ class SyntaxTest(unittest.TestCase):
         self.assertEqual(check_syntax("a"), "Saknad stor bokstav vid radslutet a")
 
     def testWrongMolecule10(self):
-        self.assertEqual(check_syntax("(C1)2)3"), "Felaktig gruppstart vid radslutet )3")
+        self.assertEqual(check_syntax("(Cl)2)3"), "Felaktig gruppstart vid radslutet )3")
 
     def testWrongMolecule11(self):
         self.assertEqual(check_syntax(")"), "Felaktig gruppstart vid radslutet )")

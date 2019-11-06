@@ -48,9 +48,11 @@ def read_formel(q):
 def read_mol(q):
     read_group(q)
 
-    if q.peek() is not None and q.peek() != ")": # ej tillräckligt villkor
+    if q.peek() is not None: # ej tillräckligt villkor
         read_mol(q)
     return
+
+
     #if dequeued is not None:
 
 """GROUP"""
@@ -63,10 +65,10 @@ def read_mol(q):
 
 def read_group(q):
     first_char = q.dequeue()    # behöver ens dequeue:a?
+
     next = q.peek()
     if q.peek() != None:
         next = q.peek()             # kollar på 21an
-
 
     if first_char != "(" and first_char != ")" and not first_char.isdigit():
         atom(first_char, q, next)   # atom pga båda cases innehålller atom
@@ -76,10 +78,10 @@ def read_group(q):
             num(next, q)
         #    q.dequeue()
             next = q.peek()
+
         return
 
-    if first_char == ")":
-        return
+
 
     elif first_char == "(":
         #q.dequeue() # för att få det inuti parentes
@@ -97,6 +99,9 @@ def read_group(q):
                 raise Syntaxfel("Saknad siffra vid radslutet " + printQueue(q))
         else:
             raise Syntaxfel("Saknad högerparentes vid radslutet ")
+
+    if first_char.isdigit() or first_char == ")":
+        raise Syntaxfel("Felaktig gruppstart vid radslutet " + first_char + printQueue(q))
 
 
 """ATOM"""
@@ -193,8 +198,6 @@ def printQueue(q):
     return_string = ""
     while not q.isEmpty():
         word = q.dequeue()
-        print(word, end=" ")
-        print()
         return_string += word
     return return_string
 
