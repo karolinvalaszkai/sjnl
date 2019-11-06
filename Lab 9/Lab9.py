@@ -35,25 +35,22 @@ atomlist = ["H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "A
 
 
 
-
+"""FORMEL"""
 # <formel>::= <mol> \n
+def read_formel(q):
+    read_mol(q)
+    '\n'
+    #+ev radbryt?
 
 
-
-
-
-# <mol>   ::= <group> | <group><mol>
-
+"""MOLECULE"""
+#  <mol>   ::= <group> | <group><mol>
 def read_mol(q):
     read_group(q)
     next = q.peek()
 
     if next is not None:
         read_mol(next)
-
-
-
-
 
 
 """GROUP"""
@@ -79,20 +76,12 @@ def read_group(q):
             raise Syntaxfel("Saknad högerparentes vid radslutet")
 
 
-
-
-
-
-
-<<<<<<< Updated upstream
-=======
-            if next.isdigit():
-                num(next, q)
-                return
-            else: raise Syntaxfel("Saknad siffra vid radslutet " + printQueue(q))
-        else:
-            raise Syntaxfel("Saknad högerparentes vid radslutet ")
->>>>>>> Stashed changes
+        if next.isdigit():
+            num(next, q)
+            return
+        else: raise Syntaxfel("Saknad siffra vid radslutet " + printQueue(q))
+    else:
+        raise Syntaxfel("Saknad högerparentes vid radslutet ")
 
 
         #raise Syntaxfel('Felaktig gruppstart vid radslutet + ?)
@@ -102,7 +91,6 @@ def read_group(q):
 
 """ATOM"""
 #< atom >::= < LETTER > | < LETTER > < letter >
-
 
 def atom(first_char, q, next):
     atom_name = first_char
@@ -125,10 +113,6 @@ def atom(first_char, q, next):
             return
 
 
-
-
-
-<<<<<<< Updated upstream
     if next is not None:
         if next.isdigit():
             return
@@ -140,20 +124,10 @@ def atom(first_char, q, next):
     else:
         return
 
-    raise Syntaxfel("Okänd atom vid radslutet") #+vadå??)
-
-=======
-
-
-
-
-
-
 
     if q.peek().islower():
         q.dequeue()
     raise Syntaxfel("Okänd atom vid radslutet " + printQueue(q))
->>>>>>> Stashed changes
 
 
 """UPPER CASE LETTER"""
@@ -166,10 +140,8 @@ def upper_case_l(first_char, next):
     if first_char.isupper(): #P if sant
         return
 
-<<<<<<< Updated upstream
-    raise Syntaxfel("Fel, borde vara uppercase: ") #+ first_char) #eller hela atomnamnet?
 
-=======
+
     else:
 
         if next is not None:
@@ -179,7 +151,6 @@ def upper_case_l(first_char, next):
         else:
 
             raise Syntaxfel("Saknad stor bokstav vid radslutet " + first_char)
->>>>>>> Stashed changes
 
 
 """LOWER CASE LETTER"""
@@ -218,17 +189,11 @@ def num(next, q):
         if int(sum_int) > 1:
             return q
 
-<<<<<<< Updated upstream
-    if int(sum_int) > 1:
-        return
 
-    raise Syntaxfel("För litet tal vid radslutet")
-=======
     else:
         q.dequeue() #pga 0
 
     raise Syntaxfel("För litet tal vid radslutet " + printQueue(q))
->>>>>>> Stashed changes
 
 
 def printQueue(q):
@@ -251,15 +216,15 @@ def check_syntax(mening):
     q = storeSentence(mening)
 
     try:
-        readformel(q)
+        read_formel(q)
         return "Formeln är syntastiskt korrekt"
     except Syntaxfel as fel:
         return str(fel) #+  " före " + str()
 
-def read_formel(q):
-    read_mol(q)
-    '\n'
-    #+ev radbryt?
+
+
+
+
 
 def main():
     mening = input("Skriv en atom: ")
