@@ -53,10 +53,10 @@ class LinkedQ():
 
     def peek(self):
         "Tittar på nästa värde i kön utan att plocka ut det. dvs. första värdet"
-        if self.__first is not None:
-            next_in_q = self.__first.data
+        #if self.__first is not None:
+        next_in_q = self.__first.data
 
-            return next_in_q
+        return next_in_q
 
 
 
