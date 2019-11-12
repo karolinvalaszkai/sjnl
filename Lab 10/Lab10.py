@@ -16,7 +16,7 @@ from linkedQFile import LinkedQ
 
 import sys
 
-from molgrafik import rutan
+from molgrafik import Ruta
 
 #Varje ruta motsvaras av ett objekt:
 
@@ -42,14 +42,14 @@ atomlist = ["H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "A
 def read_formel(q):
 
     q.enqueue("\n") #vaktecken, lägger längst bak i kön
-    read_mol(q)
+    mol = read_mol(q)
 
 
     if q.peek() != "\n": # kön ej tom
 
         raise Syntaxfel("Felaktig gruppstart vid radslutet " + printQueue(q))
 
-
+    return mol
 
 
 """MOLECULE"""
@@ -61,6 +61,7 @@ def read_mol(q):
     next = q.peek()
 
     if next == ")":
+        #mol.next = mol
         return
 
     # rutan.atom = next
@@ -69,7 +70,7 @@ def read_mol(q):
 
     # ifall det kommer en till mol
     if next.isalpha() or next == "(":
-        mol.next = read_mol(q)
+        mol.next = read_mol(q) # pekare till nästa molekyl
 
     return mol
 
@@ -85,11 +86,11 @@ def read_mol(q):
 #raisa felmeddelanden på rätt ställe
 def read_group(q):
 
-    rutan = Rutan()   # skapar en tom ruta
+    rutan = Ruta()   # skapar en tom ruta
 
-"""Nästa gång den kallas - hur ska den peka på nästa?"""
 
-    next = q.peek()
+
+    next = q.peek() # """Nästa gång den kallas - hur ska den peka på nästa?"""
 
 
     #< atom > | < atom > < num > |
@@ -97,14 +98,15 @@ def read_group(q):
     # atom -> stor bokstav
     if next.isalpha():
 
-        atom(q)       # atom pga båda cases innehålller atom
+        atom(q, rutan)       # atom pga båda cases innehålller atom
         next = q.peek()
 
 
         if next is not None and next.isdigit():      #kolla ifall number, jsdigit() pga string
-            num(q)
+            num(q, rutan)
 
-        return
+
+        return rutan
 
 
 
@@ -112,17 +114,16 @@ def read_group(q):
     # vänsterparantes
 
     if next == "(":
-        rutan = Rutan()
 
         q.dequeue()        # för att få det inuti parentesen
-        read_mol(q)
+        rutan.down = read_mol(q)# skapar pekare till det som är down
         next = q.peek()
 
         if next == ")":
             q.dequeue()
             if q.peek() is not None and q.peek().isdigit(): # kollar num
-                num(q)
-                return
+                num(q, rutan)
+                return rutan
 
             else:
                 raise Syntaxfel("Saknad siffra vid radslutet " + printQueue(q))
@@ -138,7 +139,7 @@ def read_group(q):
 
 
     # När readgroup är klar returnerar den rutan till anropet
-    return rutan
+
 
 
 
@@ -147,10 +148,10 @@ def read_group(q):
 #< atom >::= < LETTER > | < LETTER > < letter >
 
 
-def atom(q):
+def atom(q, rutan):
 
     atom_name = q.peek() #stor bokstav
-    upper_case_l(q)
+    upper_case_l(q, rutan)
 
     next = q.peek()
 
@@ -170,7 +171,7 @@ def atom(q):
 #< LETTER >::= A | B | C | ... | Z
 
 
-def upper_case_l(q):
+def upper_case_l(q, rutan):
     #check both for int or letter
 
     next = q.peek()
@@ -213,7 +214,7 @@ def lower_case_l(q):
 #< num >::= 2 | 3 | 4 | ...
 
 
-def num(q):
+def num(q, rutan):
 
     next = q.peek()
 
@@ -237,7 +238,7 @@ def num(q):
         if int(sum_int) > 1:
 
             rutan.num = sum_int    # värde på num
-            rutan.next = rutan.num
+            #rutan.atom += rutan.num
 
             return q
 
@@ -283,19 +284,19 @@ def check_syntax(mening):
 
 
 def main():
-    # mening = input("Skriv en atom: ")
-    # resultat = check_syntax(mening)
-    # print(resultat)
+     mening = input("Skriv en atom: ")
+     resultat = check_syntax(mening)
+     print(resultat)
 
-    for row in sys.stdin:  # standard input
-
-        row = row.strip()
-
-        if row == "#":
-            break
-
-        resultat = check_syntax(row)
-        print(resultat)
+    # for row in sys.stdin:  # standard input
+    #
+    #     row = row.strip()
+    #
+    #     if row == "#":
+    #         break
+    #
+    #     resultat = check_syntax(row)
+    #     print(resultat)
 
     # stdin = open("test_input.txt")
     # mol = stdin.readline()
