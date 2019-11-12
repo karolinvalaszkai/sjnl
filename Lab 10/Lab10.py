@@ -7,12 +7,23 @@
 # <letter>::= a | b | c | ... | z
 # <num>   ::= 2 | 3 | 4 | ...
 
+
+#rutan.atom
+#rutan.num
+#rutan.down ()-grupp
+
 from linkedQFile import LinkedQ
 
 import sys
 
+from molgrafik import rutan
+
+#Varje ruta motsvaras av ett objekt:
+
+
 class Syntaxfel(Exception):
     pass
+
 
 
 atomlist = ["H", "He", "Li", "Be", "B", "C", "N", "O", "F", "Ne", "Na", "Mg", "Al", "Si", "P", "S", "Cl", "Ar", "K",
@@ -45,14 +56,23 @@ def read_formel(q):
 # <mol>   ::= <group> | <group><mol>
 
 def read_mol(q):
-    read_group(q)
+    mol = read_group(q)
 
-    if q.peek() == ")":
+    next = q.peek()
+
+    if next == ")":
         return
 
+    # rutan.atom = next
+    # rutan.num = next
+    # rutan.down += rutan.atom + rutan.num
+
     # ifall det kommer en till mol
-    if q.peek().isalpha() or q.peek() == "(":
-        read_mol(q)
+    if next.isalpha() or next == "(":
+        mol.next = read_mol(q)
+
+    return mol
+
 
 
 
@@ -64,6 +84,10 @@ def read_mol(q):
 #kolla vad vi får ha , itne vad vi inte söker
 #raisa felmeddelanden på rätt ställe
 def read_group(q):
+
+    rutan = Rutan()   # skapar en tom ruta
+
+"""Nästa gång den kallas - hur ska den peka på nästa?"""
 
     next = q.peek()
 
@@ -82,14 +106,14 @@ def read_group(q):
 
         return
 
-    #else:
-    #   raise Syntaxfel("Felaktig gruppstart vid radslutet " + printQueue(q))
 
 
     # ( < mol >) < num >
     # vänsterparantes
 
     if next == "(":
+        rutan = Rutan()
+
         q.dequeue()        # för att få det inuti parentesen
         read_mol(q)
         next = q.peek()
@@ -99,7 +123,6 @@ def read_group(q):
             if q.peek() is not None and q.peek().isdigit(): # kollar num
                 num(q)
                 return
-                #q.dequeue()
 
             else:
                 raise Syntaxfel("Saknad siffra vid radslutet " + printQueue(q))
@@ -112,6 +135,10 @@ def read_group(q):
     else:
         raise Syntaxfel("Felaktig gruppstart vid radslutet " + printQueue(q))
 
+
+
+    # När readgroup är klar returnerar den rutan till anropet
+    return rutan
 
 
 
@@ -131,6 +158,8 @@ def atom(q):
     if next is not None and next.islower():
         q.dequeue()
         atom_name += next
+        rutan.atom = atom_name        # värde på rutan ex. He
+        #rutan.next = rutan.atom
 
     if atom_name not in atomlist:
         raise Syntaxfel("Okänd atom vid radslutet " + printQueue(q))
@@ -145,7 +174,9 @@ def upper_case_l(q):
     #check both for int or letter
 
     next = q.peek()
-    if next.isupper(): #P if sant
+    if next.isupper():
+        rutan.atom = next      # värde på rutan
+        #rutan.next = rutan.atom
         q.dequeue()
         return
 
@@ -186,6 +217,7 @@ def num(q):
 
     next = q.peek()
 
+
     # pga kommer från group
     if not next.isdigit():
         raise Syntaxfel("Saknad siffra vid radslutet " + printQueue(q))
@@ -203,6 +235,10 @@ def num(q):
 
 
         if int(sum_int) > 1:
+
+            rutan.num = sum_int    # värde på num
+            rutan.next = rutan.num
+
             return q
 
         else:
@@ -239,7 +275,7 @@ def check_syntax(mening):
     q = storeSentence(mening)
 
     try:
-        read_formel(q)
+        mol = read_formel(q)
         return "Formeln är syntaktiskt korrekt"
     except Syntaxfel as fel:
         return str(fel).strip() #+  " före " + str()
