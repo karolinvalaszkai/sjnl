@@ -72,8 +72,6 @@ def read_mol(q):
 
 
 
-
-
 """GROUP"""
 # <group> ::= <atom> |<atom><num> | (<mol>) <num>
 
@@ -247,6 +245,19 @@ def num(q, rutan):
         raise Syntaxfel("För litet tal vid radslutet " + printQueue(q))
 
 
+def weight(mol):
+
+    #preorder
+
+    #lägg samman totala vikten av alla molekyler
+    #läs in atomvikt för input atom från atomlista i hashtest.py
+
+    if rutan != None:
+        print(rutan.value)
+        weight(rutan.down)
+        weight(rutan.next)
+
+    return
 
 def printQueue(q):
     return_string = ""
@@ -287,6 +298,11 @@ def main():
      mg = Molgrafik()
      mg.show(resultat)
      input()
+
+
+     #Låt programmet skriva ut vikten av molekylen i terminalfönstret
+    print(weight(resultat))
+
 
     # for row in sys.stdin:  # standard input
     #
