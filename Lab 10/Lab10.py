@@ -250,14 +250,21 @@ def weight(mol):
     #preorder
 
     #lägg samman totala vikten av alla molekyler
-    #läs in atomvikt för input atom från atomlista i hashtest.py
 
-    if rutan != None:
+
+    #läs in atomvikt för input atom från atomlista i hashtest.py
+    weight = ""
+
+    if mol.next != None:
+        weight(mol.next)
+        if mol.next != "( )":
+            weight += mol.next
+
         print(rutan.value)
         weight(rutan.down)
         weight(rutan.next)
 
-    return
+    return weight
 
 def printQueue(q):
     return_string = ""
