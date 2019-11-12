@@ -16,7 +16,7 @@ from linkedQFile import LinkedQ
 
 import sys
 
-from molgrafik import Ruta
+from molgrafik import *
 
 #Varje ruta motsvaras av ett objekt:
 
@@ -61,12 +61,7 @@ def read_mol(q):
     next = q.peek()
 
     if next == ")":
-        #mol.next = mol
-        return
-
-    # rutan.atom = next
-    # rutan.num = next
-    # rutan.down += rutan.atom + rutan.num
+        return mol
 
     # ifall det kommer en till mol
     if next.isalpha() or next == "(":
@@ -87,7 +82,6 @@ def read_mol(q):
 def read_group(q):
 
     rutan = Ruta()   # skapar en tom ruta
-
 
 
     next = q.peek() # """Nästa gång den kallas - hur ska den peka på nästa?"""
@@ -277,16 +271,22 @@ def check_syntax(mening):
 
     try:
         mol = read_formel(q)
-        return "Formeln är syntaktiskt korrekt"
+        return mol #"Formeln är syntaktiskt korrekt"
     except Syntaxfel as fel:
-        return str(fel).strip() #+  " före " + str()
+        #return str(fel).strip() #+  " före " + str()
+        return mol
 
 
 
 def main():
      mening = input("Skriv en atom: ")
      resultat = check_syntax(mening)
-     print(resultat)
+     #print(resultat)
+
+     #resultat = Ruta(atom="Cl", num=2)
+     mg = Molgrafik()
+     mg.show(resultat)
+     input()
 
     # for row in sys.stdin:  # standard input
     #

@@ -1,4 +1,7 @@
 from molgrafik import *
+
+from Lab10 import *
+
 class Ruta:
     def __init__(self, atom="( )", num=1):
         self.atom = atom
