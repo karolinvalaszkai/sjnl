@@ -18,6 +18,8 @@ import sys
 
 from molgrafik import *
 
+from hashtest import *
+
 #Varje ruta motsvaras av ett objekt:
 
 
@@ -249,22 +251,40 @@ def weight(mol):
 
     #preorder
 
-    #lägg samman totala vikten av alla molekyler
-
-
     #läs in atomvikt för input atom från atomlista i hashtest.py
-    weight = ""
 
-    if mol.next != None:
-        weight(mol.next)
-        if mol.next != "( )":
-            weight += mol.next
 
-        print(rutan.value)
-        weight(rutan.down)
-        weight(rutan.next)
 
-    return weight
+    tot_weight = 0
+    atomlista = skapaAtomlista()
+    # mol.atom / mol.name
+    # kolla alla next if no next -> down, kolla alla dess next if no next -> down
+
+    if mol != None:
+        if mol.atom == "( )":
+            tot_weight += weight(mol.down) * int(mol.num)
+
+
+        else:
+            tot_weight += weight(mol.next)
+        #if mol.next != "( )":
+
+
+        for atom in atomlista:
+            if atom.namn == mol.atom:
+                mol_weight = atom.getvikt() * int(mol.num)
+                tot_weight += mol_weight
+                return tot_weight
+
+
+               #lägg samman totala vikten av alla molekyler
+
+
+        #if number -> multiply with number
+
+        #print(rutan.value)
+
+    return tot_weight
 
 def printQueue(q):
     return_string = ""
@@ -297,37 +317,22 @@ def check_syntax(mening):
 
 
 def main():
-     mening = input("Skriv en atom: ")
-     resultat = check_syntax(mening)
+    mening = input("Skriv en atom: ")
+    resultat = check_syntax(mening)
      #print(resultat)
 
      #resultat = Ruta(atom="Cl", num=2)
-     mg = Molgrafik()
-     mg.show(resultat)
-     input()
+    mg = Molgrafik()
+    mg.show(resultat)
+    total_weight = (weight(resultat))
+    print(total_weight)
+    
+    input()
 
 
      #Låt programmet skriva ut vikten av molekylen i terminalfönstret
-    print(weight(resultat))
 
 
-    # for row in sys.stdin:  # standard input
-    #
-    #     row = row.strip()
-    #
-    #     if row == "#":
-    #         break
-    #
-    #     resultat = check_syntax(row)
-    #     print(resultat)
-
-    # stdin = open("test_input.txt")
-    # mol = stdin.readline()
-    # while mol[0] != "#":
-    #     mol = mol.strip("\n")
-    #     result = check_syntax(mol)
-    #     mol = stdin.readline()
-    #     print(result)
 
 if __name__ == "__main__":
     main()
